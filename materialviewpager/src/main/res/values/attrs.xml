@@ -3,12 +3,14 @@
 
     <declare-styleable name="MaterialViewPager">
         <attr name="viewpager_header" format="reference"/>
+        <attr name="viewpager_header_topmost" format="boolean"/>
         <attr name="viewpager_logo" format="reference"/>
         <attr name="viewpager_pagerTitleStrip" format="reference"/>
         <attr name="viewpager_viewpager" format="reference"/>
         <attr name="viewpager_logoMarginTop" format="dimension"/>
         <attr name="viewpager_color" format="color"/>
         <attr name="viewpager_headerHeight" format="dimension"/>
+        <attr name="viewpager_headerMinHeight" format="dimension"/>
         <attr name="viewpager_headerAlpha" format="float"/>
         <attr name="viewpager_imageHeaderDarkLayerAlpha" format="float"/>
         <attr name="viewpager_hideToolbarAndTitle" format="boolean"/>

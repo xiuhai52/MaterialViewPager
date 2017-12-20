@@ -35,6 +35,8 @@ public class MaterialViewPagerSettings implements Parcelable {
     int headerAdditionalHeight;
     int headerHeight;
     int headerHeightPx;
+    int headerMinHeight;
+    int headerMinHeightPx;
     int color;
     float headerAlpha;
     float parallaxHeaderFactor;
@@ -46,6 +48,7 @@ public class MaterialViewPagerSettings implements Parcelable {
     boolean toolbarTransparent;
     boolean animatedHeaderImage;
     boolean disableToolbar;
+    boolean headerTopMost;
 
     //region parcelable
 
@@ -68,6 +71,9 @@ public class MaterialViewPagerSettings implements Parcelable {
         this.hideToolbarAndTitle = in.readByte() != 0;
         this.hideLogoWithFade = in.readByte() != 0;
         this.enableToolbarElevation = in.readByte() != 0;
+        this.headerTopMost = in.readByte() != 0;
+        this.headerMinHeight = in.readInt();
+        this.headerMinHeightPx = in.readInt();
     }
 
     @Override
@@ -92,6 +98,9 @@ public class MaterialViewPagerSettings implements Parcelable {
         dest.writeByte(hideToolbarAndTitle ? (byte) 1 : (byte) 0);
         dest.writeByte(hideLogoWithFade ? (byte) 1 : (byte) 0);
         dest.writeByte(enableToolbarElevation ? (byte) 1 : (byte) 0);
+        dest.writeByte(headerTopMost ? (byte)1 : (byte)0);
+        dest.writeInt(this.headerMinHeight);
+        dest.writeInt(this.headerMinHeightPx);
     }
 
     /**
@@ -127,6 +136,10 @@ public class MaterialViewPagerSettings implements Parcelable {
                 headerHeight = Math.round(pxToDp(headerHeightPx, context)); //convert to dp
             }
             {
+                headerMinHeightPx = styledAttrs.getDimensionPixelOffset(R.styleable.MaterialViewPager_viewpager_headerMinHeight, 0);
+                headerMinHeight = Math.round(pxToDp(headerMinHeightPx, context)); //convert to dp
+            }
+            {
                 headerAdditionalHeight = styledAttrs.getDimensionPixelOffset(R.styleable.MaterialViewPager_viewpager_headerAdditionalHeight, 60);
             }
             {
@@ -157,6 +170,9 @@ public class MaterialViewPagerSettings implements Parcelable {
             }
             {
                 disableToolbar = styledAttrs.getBoolean(R.styleable.MaterialViewPager_viewpager_disableToolbar, false);
+            }
+            {
+                headerTopMost = styledAttrs.getBoolean(R.styleable.MaterialViewPager_viewpager_header_topmost, false);
             }
             styledAttrs.recycle();
         } catch (Exception e) {

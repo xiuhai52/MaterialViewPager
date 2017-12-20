@@ -56,6 +56,7 @@ public class MaterialViewPagerAnimator {
     private MaterialViewPagerSettings settings;
     //list of all registered scrollers
     private List<View> scrollViewList = new ArrayList<>();
+    private List<ScrollingObserver> scrollingObservers = new ArrayList<>();
     //save all yOffsets of scrollables
     private HashMap<Object, Integer> yOffsets = new HashMap<>();
     private boolean followScrollToolbarIsVisible = false;
@@ -108,7 +109,11 @@ public class MaterialViewPagerAnimator {
             if (mHeader.headerBackground != null) {
 
                 if (this.settings.parallaxHeaderFactor != 0) {
-                    ViewCompat.setTranslationY(mHeader.headerBackground, scrollTop / this.settings.parallaxHeaderFactor);
+                    float top = scrollTop / this.settings.parallaxHeaderFactor;
+                    if (top < settings.headerMinHeightPx - settings.headerHeightPx) {
+                        top = settings.headerMinHeightPx - settings.headerHeightPx;
+                    }
+                    ViewCompat.setTranslationY(mHeader.headerBackground, top);
                 }
 
                 if (ViewCompat.getY(mHeader.headerBackground) >= 0) {
@@ -119,6 +124,10 @@ public class MaterialViewPagerAnimator {
         }
 
         log("yOffset" + yOffset);
+
+        for (ScrollingObserver observer: scrollingObservers) {
+            observer.onMaterialScrolled(source, yOffset);
+        }
 
         //dispatch the new offset to all registered scrollables
         dispatchScrollOffset(source, minMax(0, yOffset, scrollMaxDp));
@@ -172,8 +181,17 @@ public class MaterialViewPagerAnimator {
 
                 //mHeader.mPagerSlidingTabStrip.setTranslationY(mHeader.getToolbar().getBottom()-mHeader.mPagerSlidingTabStrip.getY());
                 if (scrollTop <= 0) {
-                    ViewCompat.setTranslationY(mHeader.mPagerSlidingTabStrip, scrollTop);
-                    ViewCompat.setTranslationY(mHeader.toolbarLayoutBackground, scrollTop);
+
+                    float top = scrollTop;
+                    if (settings.headerTopMost) {
+                        top = scrollTop / this.settings.parallaxHeaderFactor;
+                        if (top < settings.headerMinHeightPx - settings.headerHeightPx) {
+                            top = settings.headerMinHeightPx - settings.headerHeightPx;
+                        }
+                    }
+
+                    ViewCompat.setTranslationY(mHeader.mPagerSlidingTabStrip, top);
+                    ViewCompat.setTranslationY(mHeader.toolbarLayoutBackground, top);
 
                     //when
                     if (ViewCompat.getY(mHeader.mPagerSlidingTabStrip) < mHeader.getToolbar().getBottom()) {
@@ -390,6 +408,14 @@ public class MaterialViewPagerAnimator {
         }
     }
 
+    public void registerScrollObserver(ScrollingObserver observer) {
+        scrollingObservers.add(observer);
+    }
+
+    public void unregisterScrollObserver(ScrollingObserver observer) {
+        scrollingObservers.remove(observer);
+    }
+
     void restoreScroll(final float scroll, final MaterialViewPagerSettings settings) {
         //try to scroll up, on a looper to wait until restored
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
@@ -553,5 +579,9 @@ public class MaterialViewPagerAnimator {
             });
             headerAnimator.start();
         }
+    }
+
+    public interface ScrollingObserver {
+        public void onMaterialScrolled(Object source, float yOffset);
     }
 }

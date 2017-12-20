@@ -304,6 +304,11 @@ public class MaterialViewPager extends FrameLayout implements ViewPager.OnPageCh
         //add @layout/material_view_pager_layout as child, containing all the MaterialViewPager views
         addView(LayoutInflater.from(getContext()).inflate(R.layout.material_view_pager_layout, this, false));
 
+        if (settings.headerTopMost) {
+            findViewById(R.id.headerBackground).bringToFront();
+            findViewById(R.id.toolbar_layout).bringToFront();
+        }
+
         headerBackgroundContainer = (ViewGroup) findViewById(R.id.headerBackgroundContainer);
         pagerTitleStripContainer = (ViewGroup) findViewById(R.id.pagerTitleStripContainer);
         viewpagerContainer = (ViewGroup) findViewById(R.id.viewpager_layout);
@@ -401,7 +406,7 @@ public class MaterialViewPager extends FrameLayout implements ViewPager.OnPageCh
         }
         if (pagerTitleStripContainer != null) {
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) pagerTitleStripContainer.getLayoutParams();
-            int marginTop = (int) Utils.dpToPx(this.settings.headerHeight - 40, getContext());
+            int marginTop = (int) Utils.dpToPx(this.settings.headerHeight - 50, getContext());
             layoutParams.setMargins(0, marginTop, 0, 0);
             pagerTitleStripContainer.setLayoutParams(layoutParams);
         }
