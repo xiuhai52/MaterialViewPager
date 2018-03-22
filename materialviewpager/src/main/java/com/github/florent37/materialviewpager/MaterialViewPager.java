@@ -39,7 +39,7 @@ public class MaterialViewPager extends FrameLayout implements ViewPager.OnPageCh
     //the child toolbar
     protected Toolbar mToolbar;
     //the child viewpager
-    protected ViewPager mViewPager;
+    protected DeactivatableViewPager mViewPager;
     //a view used to add placeholder color below the header
     protected View headerBackground;
     //a view used to add fading color over the headerBackgroundContainer
@@ -132,7 +132,7 @@ public class MaterialViewPager extends FrameLayout implements ViewPager.OnPageCh
      *
      * @return the displayed viewpager
      */
-    public ViewPager getViewPager() {
+    public DeactivatableViewPager getViewPager() {
         return mViewPager;
     }
 
@@ -327,7 +327,7 @@ public class MaterialViewPager extends FrameLayout implements ViewPager.OnPageCh
             }
         }
 
-        mViewPager = (ViewPager) findViewById(R.id.materialviewpager_viewpager);
+        mViewPager = (DeactivatableViewPager) findViewById(R.id.materialviewpager_viewpager);
 
         mViewPager.addOnPageChangeListener(this);
 
